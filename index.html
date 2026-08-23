@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>AI-Powered Performance Management System</title>
+<style>
+  :root {
+    --primary: #4f46e5; --primary-dark: #4338ca;
+    --bg: #f0f4f8; --card: #ffffff;
+    --text: #1e293b; --muted: #64748b;
+    --border: #e2e8f0; --radius: 12px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background:var(--bg); color:var(--text); line-height:1.5; padding-bottom:120px; }
+  .container { max-width:860px; margin:0 auto; padding:20px 16px; }
+  header.hero { background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; padding:34px 24px; border-radius:0 0 24px 24px; text-align:center; }
+  header.hero h1 { font-size:26px; margin-bottom:6px; }
+  header.hero p { opacity:0.9; font-size:14px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-top:20px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+  .sec-head { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--primary); padding-bottom:10px; margin-bottom:18px; }
+  .sec-head h2 { font-size:18px; color:var(--primary-dark); }
+  .weight { background:#eef2ff; color:var(--primary-dark); font-size:12px; font-weight:600; padding:4px 10px; border-radius:20px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:600px){ .grid2 { grid-template-columns:1fr; } }
+  label { display:block; font-size:13px; font-weight:600; color:var(--muted); margin-bottom:5px; }
+  input, select, textarea { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px; font-family:inherit; background:#fff; }
+  input:focus, select:focus, textarea:focus { outline:2px solid var(--primary); outline-offset:-1px; border-color:var(--primary); }
+  textarea { min-height:80px; resize:vertical; }
+  .field { margin-bottom:14px; }
+  .item-row { background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:12px; }
+  .item-row .row-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .item-row .row-head strong { font-size:14px; }
+  .btn { border:none; border-radius:10px; padding:13px 26px; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .btn-primary { background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(79,70,229,.35); }
+  .btn-green { background:linear-gradient(135deg,#059669,#10b981); color:#fff; }
+  .btn-green:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
+  .btn-small { padding:8px 14px; font-size:13px; border-radius:8px; }
+  .btn-add { background:#eef2ff; color:var(--primary-dark); border:1px dashed var(--primary); }
+  .btn-del { background:#fee2e2; color:#dc2626; padding:4px 10px; font-size:12px; border-radius:6px; }
+  .sticky-bar { position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--border); padding:14px 20px; display:flex; justify-content:center; gap:14px; box-shadow:0 -4px 12px rgba(0,0,0,.08); z-index:50; }
+  .info-note { background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:12px 16px; font-size:13px; color:#92400e; margin-top:20px; }
+  #results { display:none; }
+  .score-hero { text-align:center; padding:10px 0 20px; }
+  .score-circle { width:130px; height:130px; border-radius:50%; margin:0 auto 14px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; font-weight:700; }
+  .score-circle .num { font-size:36px; }
+  .score-circle .lbl { font-size:13px; opacity:.95; }
+  .rating-badge { display:inline-block; padding:6px 18px; border-radius:20px; color:#fff; font-weight:700; font-size:16px; }
+  .cat-bar { margin-bottom:14px; }
+  .cat-bar .lbl { display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px; }
+  .bar-track { background:#e2e8f0; border-radius:8px; height:14px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:8px; background:linear-gradient(90deg,#4f46e5,#7c3aed); }
+  .insight-box { background:#f8fafc; border-left:4px solid var(--primary); border-radius:8px; padding:14px 16px; margin-bottom:12px; font-size:14px; }
+  .rec-list li { margin-bottom:8px; font-size:14px; }
+  .status-msg { text-align:center; margin-top:14px; font-size:14px; font-weight:600; display:none; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:600px){ .two-col { grid-template-columns:1fr; } }
+  .hint { font-size:12px; color:var(--muted); margin-top:4px; font-weight:400; }
+</style>
+</head>
+<body>
+<header class="hero">
+  <h1>AI-Powered Performance Management System</h1>
+  <p>Complete all 8 sections, then click "Calculate Results" for AI scoring, insights &amp; recommendations.</p>
+</header>
+<div class="container">
+  <div class="info-note">
+    <b>How it works:</b> Fill in the employee's details and ratings below. The AI engine computes weighted scores
+    (Goals 30% &middot; Competencies 25% &middot; Quality 15% &middot; Attendance 10% &middot; 360&deg; Feedback 10% &middot; Development 10%),
+    assigns a rating band (A&ndash;E), and generates insights, recommendations and an outcome summary.
+  </div>
+
+  <!-- SECTION 1: Employee Information -->
+  <div class="card">
+    <div class="sec-head"><h2>1. Employee Information</h2></div>
+    <div class="grid2">
+      <div class="field"><label>Employee Name *</label><input type="text" id="empName" placeholder="Full name"></div>
+      <div class="field"><label>Employee ID</label><input type="text" id="empId" placeholder="e.g. BSG-1024"></div>
+      <div class="field"><label>Job Title</label><input type="text" id="empRole" placeholder="e.g. Sales Executive"></div>
+      <div class="field"><label>Department</label><input type="text" id="empDept" placeholder="e.g. Sales"></div>
+      <div class="field"><label>Reviewer Name *</label><input type="text" id="reviewerName" placeholder="Your name"></div>
+      <div class="field"><label>Review Period *</label><input type="text" id="reviewPeriod" placeholder="e.g. Jan &ndash; Jun 2026"></div>
+    </div>
+  </div>
+  <!-- SECTION 2: Goal Achievement -->
+  <div class="card">
+    <div class="sec-head"><h2>2. Goal Achievement (OKRs / KPIs)</h2><span class="weight">Weight: 30%</span></div>
+    <div id="goalsList"></div>
+    <button type="button" class="btn btn-add btn-small" onclick="addGoal()">+ Add Goal</button>
+    <p class="hint">Rate each goal 1&ndash;5: 1 = Not achieved, 3 = Partially achieved, 5 = Fully exceeded.</p>
+  </div>
+
+  <!-- SECTION 3: Core Competencies -->
+  <div class="card">
+    <div class="sec-head"><h2>3. Core Competencies</h2><span class="weight">Weight: 25%</span></div>
+    <div id="compList"></div>
+    <p class="hint">Rate each competency 1&ndash;5 based on observed behavior during the review period.</p>
+  </div>
+
+  <!-- SECTION 4: Quality of Work -->
+  <div class="card">
+    <div class="sec-head"><h2>4. Quality of Work</h2><span class="weight">Weight: 15%</span></div>
+    <div id="qualList"></div>
+  </div>
+
+  <!-- SECTION 5: Attendance & Reliability -->
+  <div class="card">
+    <div class="sec-head"><h2>5. Attendance &amp; Reliability</h2><span class="weight">Weight: 10%</span></div>
+    <div class="grid2">
+      <div class="field"><label>Days Absent (unplanned)</label><input type="number" id="daysAbsent" min="0" value="0"></div>
+      <div class="field"><label>Days Late</label><input type="number" id="daysLate" min="0" value="0"></div>
+    </div>
+    <div class="field"><label>Base Attendance Rating (1&ndash;5)</label>
+      <select id="attBase">
+        <option value="5">5 - Perfect reliability</option>
+        <option value="4">4 - Very reliable</option>
+        <option value="3" selected>3 - Generally reliable</option>
+        <option value="2">2 - Frequent issues</option>
+        <option value="1">1 - Unreliable</option>
+      </select>
+      <p class="hint">Automatic penalties apply: &gt;10 days absent or late reduces the score.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 6: 360 Feedback -->
+  <div class="card">
+    <div class="sec-head"><h2>6. 360&deg; Feedback</h2><span class="weight">Weight: 10%</span></div>
+    <div class="field"><label>Average Peer / Stakeholder Rating (1&ndash;5)</label>
+      <select id="fbScore">
+        <option value="5">5 - Exceptional feedback</option>
+        <option value="4">4 - Positive feedback</option>
+        <option value="3" selected>3 - Mixed feedback</option>
+        <option value="2">2 - Concerning feedback</option>
+        <option value="1">1 - Negative feedback</option>
+      </select>
+    </div>
+    <div class="field"><label>Feedback Summary / Comments</label><textarea id="feedbackText" placeholder="Key themes from peer, subordinate and stakeholder feedback..."></textarea></div>
+  </div>
+
+  <!-- SECTION 7: Development & Training -->
+  <div class="card">
+    <div class="sec-head"><h2>7. Development &amp; Training</h2><span class="weight">Weight: 10%</span></div>
+    <div class="field"><label>Commitment to Development (1&ndash;5)</label>
+      <select id="devScore">
+        <option value="5">5 - Exceeded development plan</option>
+        <option value="4">4 - Completed all planned training</option>
+        <option value="3" selected>3 - Completed most training</option>
+        <option value="2">2 - Minimal engagement</option>
+        <option value="1">1 - No engagement</option>
+      </select>
+    </div>
+    <div class="field"><label>Training &amp; Development Notes</label><textarea id="trainingNotes" placeholder="Courses completed, certifications, skills gained..."></textarea></div>
+  </div>
+
+  <!-- SECTION 8: Reviewer Comments -->
+  <div class="card">
+    <div class="sec-head"><h2>8. Reviewer Comments</h2></div>
+    <div class="field"><label>Key Strengths</label><textarea id="strengthsText" placeholder="What does this employee do exceptionally well?"></textarea></div>
+    <div class="field"><label>Areas for Improvement</label><textarea id="improveText" placeholder="Where should this employee focus development?"></textarea></div>
+    <div class="field"><label>Overall Narrative</label><textarea id="narrativeText" placeholder="Your overall assessment of performance this period..."></textarea></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="card" id="resultsCard"></div>
+  </div>
+
+  <div class="status-msg" id="statusMsg"></div>
+<div class="sticky-bar">
+  <button type="button" class="btn btn-primary" onclick="calculateResults()">Calculate Results</button>
+  <button type="button" class="btn btn-green" id="submitHrBtn" onclick="submitToHR()" disabled title="Calculate results first to enable submission">Submit to HR</button>
+</div>
+
+<script>
+/* ================= CONFIG ================= */
+var HR_SUBMIT_URL = "https://script.google.com/macros/s/AKfycbzUlzrH_ORZd91MKjlLmSN_XBZVcXacQPOkK-Z_R-twH6z5GC8iiD4rSmLj59zSggHL/exec";
+
+var WEIGHTS = { goals:0.30, comp:0.25, qual:0.15, att:0.10, fb:0.10, dev:0.10 };
+
+var COMPETENCIES = [
+  "Communication Skills", "Teamwork & Collaboration", "Problem Solving",
+  "Accountability & Ownership", "Adaptability & Flexibility", "Professionalism & Work Ethic"
+];
+var QUALITY_ITEMS = ["Accuracy & Attention to Detail", "Timeliness & Meeting Deadlines", "Consistency of Output"];
+
+var lastResults = null;
+
+/* ============ DYNAMIC ITEM BUILDERS ============ */
+function ratingSelect(id, val) {
+  var opts = "";
+  var labels = {1:"1 - Poor",2:"2 - Below Expectations",3:"3 - Meets Expectations",4:"4 - Exceeds Expectations",5:"5 - Outstanding"};
+  for (var i=1;i<=5;i++){ opts += '<option value="'+i+'"'+(i===(val||3)?' selected':'')+'>'+labels[i]+'</option>'; }
+  return '<select id="'+id+'">'+opts+'</select>';
+}
+function addGoal(desc, score) {
+  var n = document.getElementById("goalsList").children.length + 1;
+  var div = document.createElement("div");
+  div.className = "item-row"; div.setAttribute("data-goal","");
+  div.innerHTML = '<div class="row-head"><strong>Goal '+n+'</strong><button type="button" class="btn btn-del" onclick="this.parentNode.parentNode.remove();renumberGoals();">Remove</button></div>'
+    + '<div class="field"><label>Goal / KPI Description</label><input type="text" class="goal-desc" placeholder="e.g. Achieve 120% of sales target" value="'+(desc||"")+'"></div>'
+    + '<div class="field"><label>Achievement Rating (1-5)</label>'+ratingSelect("", score)+'</div>';
+  div.querySelector("select").className = "goal-score";
+  document.getElementById("goalsList").appendChild(div);
+}
+function renumberGoals() {
+  var rows = document.querySelectorAll("#goalsList .item-row");
+  for (var i=0;i<rows.length;i++){ rows[i].querySelector("strong").textContent = "Goal "+(i+1); }
+}
+function buildCompetencies() {
+  var html = "";
+  for (var i=0;i<COMPETENCIES.length;i++){
+    html += '<div class="item-row"><div class="row-head"><strong>'+COMPETENCIES[i]+'</strong></div>'
+      + '<div class="field" style="margin-bottom:0;">'+ratingSelect("comp_"+i,3)+'</div></div>';
+  }
+  document.getElementById("compList").innerHTML = html;
+}
+function buildQuality() {
+  var html = "";
+  for (var i=0;i<QUALITY_ITEMS.length;i++){
+    html += '<div class="item-row"><div class="row-head"><strong>'+QUALITY_ITEMS[i]+'</strong></div>'
+      + '<div class="field" style="margin-bottom:0;">'+ratingSelect("qual_"+i,3)+'</div></div>';
+  }
+  document.getElementById("qualList").innerHTML = html;
+}
+
+/* ============ DATA COLLECTION ============ */
+function val(id){ var el=document.getElementById(id); return el ? el.value : ""; }
+function num(id){ var v=parseFloat(val(id)); return isNaN(v)?0:v; }
+
+function collectData() {
+  var errors = [];
+  if (!val("empName").trim()) errors.push("Employee Name");
+  if (!val("reviewerName").trim()) errors.push("Reviewer Name");
+  if (!val("reviewPeriod").trim()) errors.push("Review Period");
+  var goalRows = document.querySelectorAll("#goalsList .item-row");
+  if (goalRows.length === 0) errors.push("At least one Goal");
+  if (errors.length){ alert("Please complete the following before calculating:\n\n- "+errors.join("\n- ")); return null; }
+
+  var goals = [], goalSum = 0;
+  for (var i=0;i<goalRows.length;i++){
+    var d = goalRows[i].querySelector(".goal-desc").value.trim();
+    var s = parseFloat(goalRows[i].querySelector(".goal-score").value);
+    goals.push({desc:("Goal "+(i+1)+(d?": "+d:"")), score:s});
+    goalSum += s;
+  }
+  var comps = [], compSum = 0;
+  for (var j=0;j<COMPETENCIES.length;j++){ var cs=parseFloat(val("comp_"+j)); comps.push({name:COMPETENCIES[j],score:cs}); compSum+=cs; }
+  var quals = [], qualSum = 0;
+  for (var k=0;k<QUALITY_ITEMS.length;k++){ var qs=parseFloat(val("qual_"+k)); quals.push({name:QUALITY_ITEMS[k],score:qs}); qualSum+=qs; }
+
+  return {
+    empName:val("empName").trim(), empId:val("empId").trim(), empRole:val("empRole").trim(), empDept:val("empDept").trim(),
+    reviewerName:val("reviewerName").trim(), reviewPeriod:val("reviewPeriod").trim(),
+    goals:goals, goalAvg:goalSum/goals.length,
+    comps:comps, compAvg:compSum/COMPETENCIES.length,
+    quals:quals, qualAvg:qualSum/QUALITY_ITEMS.length,
+    daysAbsent:num("daysAbsent"), daysLate:num("daysLate"), attBase:parseFloat(val("attBase")),
+    fbScore:parseFloat(val("fbScore")), feedbackText:val("feedbackText").trim(),
+    devScore:parseFloat(val("devScore")), trainingNotes:val("trainingNotes").trim(),
+    strengthsText:val("strengthsText").trim(), improveText:val("improveText").trim(), narrativeText:val("narrativeText").trim()
+  };
+}
+/* ============ SCORING ENGINE ============ */
+function computeScores(d) {
+  var attScore = d.attBase;
+  var penalties = [];
+  if (d.daysAbsent > 10) { attScore = Math.max(1, attScore - 1.5); penalties.push("Automatic penalty: "+d.daysAbsent+" days absent (>10) reduced attendance score."); }
+  if (d.daysLate > 10) { attScore = Math.max(1, attScore - 1); penalties.push("Automatic penalty: "+d.daysLate+" days late (>10) reduced attendance score."); }
+
+  var final = d.goalAvg*WEIGHTS.goals + d.compAvg*WEIGHTS.comp + d.qualAvg*WEIGHTS.qual
+            + attScore*WEIGHTS.att + d.fbScore*WEIGHTS.fb + d.devScore*WEIGHTS.dev;
+
+  var band;
+  if (final >= 4.5) band = {grade:"A", label:"A - Exceptional Performance", color:"#10b981"};
+  else if (final >= 3.5) band = {grade:"B", label:"B - Strong Performance", color:"#3b82f6"};
+  else if (final >= 2.5) band = {grade:"C", label:"C - Solid Performance", color:"#f59e0b"};
+  else if (final >= 1.5) band = {grade:"D", label:"D - Needs Improvement", color:"#f97316"};
+  else band = {grade:"E", label:"E - PIP Required", color:"#ef4444"};
+
+  return { attScore:attScore, penalties:penalties, finalScore:Math.round(final*100)/100, band:band };
+}
+
+function generateInsights(d, s) {
+  var cats = [
+    {name:"Goal Achievement", avg:d.goalAvg}, {name:"Core Competencies", avg:d.compAvg},
+    {name:"Quality of Work", avg:d.qualAvg}, {name:"Attendance & Reliability", avg:s.attScore},
+    {name:"360 Feedback", avg:d.fbScore}, {name:"Development & Training", avg:d.devScore}
+  ];
+  cats.sort(function(a,b){return b.avg-a.avg;});
+  var insights = [];
+  insights.push("<b>Top strength:</b> "+cats[0].name+" ("+cats[0].avg.toFixed(2)+"/5) is the strongest area this period.");
+  insights.push("<b>Biggest risk:</b> "+cats[cats.length-1].name+" ("+cats[cats.length-1].avg.toFixed(2)+"/5) needs the most attention.");
+  var spread = cats[0].avg - cats[cats.length-1].avg;
+  insights.push(spread > 1.5 ? "<b>Consistency:</b> Performance is uneven (spread of "+spread.toFixed(1)+" points) &mdash; strengths should be leveraged to lift weaker areas."
+                            : "<b>Consistency:</b> Performance is balanced across categories (spread of only "+spread.toFixed(1)+" points).");
+  if (d.daysAbsent > 5) insights.push("<b>Attendance flag:</b> "+d.daysAbsent+" unplanned absences this period.");
+  if (d.devScore <= 2) insights.push("<b>Development gap:</b> Low engagement with training/development activities.");
+  var lowComps = [];
+  for (var i=0;i<d.comps.length;i++){ if (d.comps[i].score <= 2) lowComps.push(d.comps[i].name); }
+  if (lowComps.length) insights.push("<b>Competency gaps:</b> "+lowComps.join(", ")+" rated 2 or below.");
+  for (var p=0;p<s.penalties.length;p++) insights.push(s.penalties[p]);
+  return insights;
+}
+
+function generateRecs(d, s) {
+  var recs = [];
+  var g = s.band.grade;
+  if (g==="A") { recs.push("Consider for promotion, expanded responsibilities, or leadership opportunities.");
+                 recs.push("Recommend merit increase at the top of the band and formal recognition.");
+                 recs.push("Enroll in mentoring program to share strengths with peers."); }
+  else if (g==="B") { recs.push("Recommend merit increase within the standard band.");
+                 recs.push("Assign stretch goals for the next period to push toward Exceptional.");
+                 recs.push("Focus development on the lowest-scoring category identified above."); }
+  else if (g==="C") { recs.push("Standard or modest merit increase; set clear improvement targets.");
+                 recs.push("Create a 6-month development plan targeting the two lowest categories.");
+                 recs.push("Schedule quarterly check-ins to track progress."); }
+  else if (g==="D") { recs.push("No merit increase this period. Implement a structured improvement plan.");
+                 recs.push("Bi-weekly coaching sessions with documented progress reviews.");
+                 recs.push("Re-evaluate in 3 months with clear, measurable milestones."); }
+  else { recs.push("<b>Performance Improvement Plan (PIP) required.</b> Document issues and set a 60-90 day PIP.");
+                 recs.push("HR should be involved in all PIP meetings and documentation.");
+                 recs.push("If no improvement by PIP end, consider role reassignment or separation."); }
+  if (d.devScore <= 2) recs.push("Assign mandatory training aligned to the employee's development gaps.");
+  if (d.daysAbsent > 10 || d.daysLate > 10) recs.push("Address attendance pattern in a formal discussion; review flexible-work options if applicable.");
+  return recs;
+}
+
+function meritGuidance(grade) {
+  var map = {"A":"Merit increase: 8-12% (top of band) + recognition.","B":"Merit increase: 4-7% (standard band).",
+             "C":"Merit increase: 0-3% (modest, tied to improvement targets).","D":"No merit increase this period.",
+             "E":"No merit increase. PIP in effect."};
+  return map[grade] || "";
+}
+
+/* ============ DISPLAY ============ */
+function calculateResults() {
+  var d = collectData();
+  if (!d) return;
+  var s = computeScores(d);
+  var insights = generateInsights(d, s);
+  var recs = generateRecs(d, s);
+  lastResults = { data:d, scores:s, insights:insights, recs:recs };
+
+  var html = '<div class="sec-head"><h2>AI Results &mdash; '+d.empName+'</h2></div>'
+    + '<div class="score-hero">'
+    + '<div class="score-circle" style="background:'+s.band.color+';"><span class="num">'+s.finalScore.toFixed(2)+'</span><span class="lbl">out of 5.00</span></div>'
+    + '<span class="rating-badge" style="background:'+s.band.color+';">'+s.band.label+'</span>'
+    + '</div>';
+
+  var catRows = [
+    ["Goal Achievement (30%)", d.goalAvg], ["Core Competencies (25%)", d.compAvg],
+    ["Quality of Work (15%)", d.qualAvg], ["Attendance & Reliability (10%)", s.attScore],
+    ["360 Feedback (10%)", d.fbScore], ["Development & Training (10%)", d.devScore]
+  ];
+  for (var i=0;i<catRows.length;i++){
+    var pct = (catRows[i][1]/5)*100;
+    html += '<div class="cat-bar"><div class="lbl"><span>'+catRows[i][0]+'</span><b>'+catRows[i][1].toFixed(2)+'</b></div>'
+      + '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;"></div></div></div>';
+  }
+
+  html += '<h3 style="margin:18px 0 10px;color:#4338ca;">AI Insights</h3>';
+  for (var j=0;j<insights.length;j++) html += '<div class="insight-box">'+insights[j]+'</div>';
+
+  html += '<h3 style="margin:18px 0 10px;color:#4338ca;">Development Recommendations</h3><ul class="rec-list">';
+  for (var r=0;r<recs.length;r++) html += '<li>'+recs[r]+'</li>';
+  html += '</ul>';
+
+  html += '<h3 style="margin:18px 0 10px;color:#4338ca;">Recommended Outcome</h3>'
+    + '<div class="insight-box"><b>'+meritGuidance(s.band.grade)+'</b><br>Next steps: '+(recs[0]||"")+'</div>';
+
+  document.getElementById("resultsCard").innerHTML = html;
+  document.getElementById("results").style.display = "block";
+  var btn = document.getElementById("submitHrBtn");
+  btn.disabled = false; btn.title = "Submit this appraisal to HR";
+  btn.style.opacity = "1"; btn.style.cursor = "pointer";
+  document.getElementById("results").scrollIntoView({behavior:"smooth"});
+}
+
+/* ============ SUBMISSION ============ */
+function submitToHR() {
+  if (!lastResults) { alert("Please click 'Calculate Results' first."); return; }
+  if (!HR_SUBMIT_URL) { alert("HR submission URL is not configured."); return; }
+  var btn = document.getElementById("submitHrBtn");
+  btn.disabled = true; btn.textContent = "Submitting...";
+
+  var d = lastResults.data, s = lastResults.scores;
+  var goalsDetail = "", compDetail = "", qualDetail = "";
+  for (var i=0;i<d.goals.length;i++) goalsDetail += d.goals[i].desc+" ("+d.goals[i].score+"/5)\n";
+  for (var j=0;j<d.comps.length;j++) compDetail += d.comps[j].name+": "+d.comps[j].score+"/5\n";
+  for (var k=0;k<d.quals.length;k++) qualDetail += d.quals[k].name+": "+d.quals[k].score+"/5\n";
+
+  var payload = {
+    empName:d.empName, empId:d.empId, empRole:d.empRole, empDept:d.empDept,
+    reviewerName:d.reviewerName, reviewPeriod:d.reviewPeriod,
+    finalScore:s.finalScore.toFixed(2), ratingLabel:s.band.label, ratingColor:s.band.color,
+    goalAvg:d.goalAvg.toFixed(2), compAvg:d.compAvg.toFixed(2), qualAvg:d.qualAvg.toFixed(2),
+    attAvg:s.attScore.toFixed(2), fbAvg:d.fbScore.toFixed(2), devAvg:d.devScore.toFixed(2),
+    daysAbsent:d.daysAbsent, daysLate:d.daysLate,
+    goalsDetail:goalsDetail, compDetail:compDetail, qualDetail:qualDetail,
+    feedbackText:d.feedbackText, trainingNotes:d.trainingNotes,
+    strengthsText:d.strengthsText, improveText:d.improveText, narrativeText:d.narrativeText,
+    insights:lastResults.insights.join("<br>"), recommendations:lastResults.recs.join("<br>")
+  };
+
+  var msg = document.getElementById("statusMsg");
+  fetch(HR_SUBMIT_URL, { method:"POST", mode:"no-cors",
+    headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload)
+  }).then(function(){
+    msg.style.display="block"; msg.style.color="#059669";
+    msg.textContent = "Submitted to HR successfully! Saved to the Google Sheet and notification email sent to HR.";
+    btn.textContent = "Submitted \u2713";
+  }).catch(function(err){
+    msg.style.display="block"; msg.style.color="#dc2626";
+    msg.textContent = "Submission may have failed. Please check your connection and try again, or contact HR directly.";
+    btn.disabled = false; btn.textContent = "Submit to HR";
+  });
+}
+
+/* ============ INIT ============ */
+addGoal(); addGoal();
+buildCompetencies();
+buildQuality();
+</script>
+</body>
+</html>
