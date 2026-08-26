@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WFH Day Feedback Survey — Blue Sky Group</title>
+<style>
+  :root {
+    --primary: #4f46e5; --primary-dark: #4338ca;
+    --bg: #f0f4f8; --card: #ffffff;
+    --text: #1e293b; --muted: #64748b;
+    --border: #e2e8f0; --radius: 12px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI', Arial, sans-serif; background:var(--bg); color:var(--text); line-height:1.5; padding-bottom:110px; }
+  .container { max-width:860px; margin:0 auto; padding:20px 16px; }
+  header.hero { background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; padding:34px 24px; border-radius:0 0 24px 24px; text-align:center; }
+  header.hero h1 { font-size:26px; margin-bottom:6px; }
+  header.hero p { opacity:0.9; font-size:14px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-top:20px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+  .sec-head { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--primary); padding-bottom:10px; margin-bottom:18px; }
+  .sec-head h2 { font-size:18px; color:var(--primary-dark); }
+  label { display:block; font-size:13px; font-weight:600; color:var(--muted); margin-bottom:5px; }
+  input, select, textarea { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px; font-family:inherit; background:#fff; }
+  input:focus, select:focus, textarea:focus { outline:2px solid var(--primary); outline-offset:-1px; border-color:var(--primary); }
+  textarea { min-height:80px; resize:vertical; }
+  .field { margin-bottom:14px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:600px){ .grid2 { grid-template-columns:1fr; } }
+  .btn { border:none; border-radius:10px; padding:13px 26px; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .btn-green { background:linear-gradient(135deg,#059669,#10b981); color:#fff; }
+  .btn-green:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(5,150,105,.35); }
+  .btn-green:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
+  .sticky-bar { position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--border); padding:14px 20px; display:flex; justify-content:center; gap:14px; box-shadow:0 -4px 12px rgba(0,0,0,.08); z-index:50; }
+  .info-note { background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:12px 16px; font-size:13px; color:#92400e; margin-top:20px; }
+  .status-msg { text-align:center; margin-top:14px; font-size:14px; font-weight:600; display:none; }
+  .scale-row { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 2px; }
+  .scale-row .opt { flex:1; min-width:96px; }
+  .scale-row .opt input { position:absolute; opacity:0; pointer-events:none; }
+  .scale-row .opt span { display:block; text-align:center; border:1px solid var(--border); border-radius:8px; padding:10px 6px; font-size:13px; cursor:pointer; background:#f8fafc; transition:all .15s; }
+  .scale-row .opt input:checked + span { background:var(--primary); color:#fff; border-color:var(--primary); font-weight:600; }
+  .hint { font-size:12px; color:var(--muted); margin-top:4px; font-weight:400; }
+  .flag-alert { background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:12px 16px; font-size:13px; color:#991b1b; margin-top:12px; display:none; }
+  .dept-checkbox-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:6px 0 4px; }
+  @media (max-width:600px){ .dept-checkbox-grid { grid-template-columns:1fr 1fr; } }
+  .dept-checkbox-grid .opt { position:relative; }
+  .dept-checkbox-grid input { position:absolute; opacity:0; pointer-events:none; }
+  .dept-checkbox-grid span { display:block; text-align:center; border:1px solid var(--border); border-radius:8px; padding:9px 6px; font-size:13px; cursor:pointer; background:#f8fafc; transition:all .15s; }
+  .dept-checkbox-grid input:checked + span { background:#eef2ff; color:var(--primary-dark); border-color:var(--primary); font-weight:600; box-shadow:inset 0 0 0 1px var(--primary); }
+  .anon-note { text-align:center; font-size:13px; color:var(--muted); margin-top:26px; }
+</style>
+</head>
+<body>
+<header class="hero">
+  <h1>Work-From-Home Day Feedback Survey</h1>
+  <p>Blue Sky Group &middot; Internal Survey &middot; Your responses are confidential and go directly to HR.</p>
+</header>
+<div class="container">
+  <div class="info-note">
+    <b>Purpose:</b> This survey assesses how effective the voluntary WFH day is for you — how easy it is to reach and be reached by colleagues, whether any departments are harder to work with remotely, and whether you need to flag anything (a tool, a process, or a person/situation) to HR. It takes about 2 minutes.
+  </div>
+<form id="wfhForm" onsubmit="return false;">
+
+  <!-- 1. About you -->
+  <div class="card">
+    <div class="sec-head"><h2>1. About You</h2></div>
+    <div class="grid2">
+      <div class="field"><label>Full Name <span style="font-weight:400;color:#94a3b8;">(optional — leave blank to stay anonymous)</span></label><input type="text" id="empName" placeholder="Your name (optional)"></div>
+      <div class="field"><label>Your Department *</label>
+        <select id="empDept" required>
+          <option value="" disabled selected>Select your department…</option>
+          <option>Human Resources</option><option>Finance &amp; Accounting</option><option>Sales</option>
+          <option>Marketing</option><option>Operations</option><option>Customer Service / Support</option>
+          <option>Information Technology (IT)</option><option>Administration</option><option>Procurement</option>
+          <option>Legal</option><option>Management / Leadership</option><option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Date of the WFH day you are rating *</label><input type="date" id="wfhDate" required></div>
+      <div class="field"><label>How many WFH days have you taken so far?</label>
+        <select id="wfhCount">
+          <option>This was my first WFH day</option>
+          <option>2 – 3</option>
+          <option>4 – 6</option>
+          <option>More than 6</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Reachability & Communication -->
+  <div class="card">
+    <div class="sec-head"><h2>2. Reachability &amp; Communication</h2></div>
+    <div class="field">
+      <label>How easy was it to REACH your own team members while working from home? *</label>
+      <div class="scale-row" data-group="reachTeam"></div>
+    </div>
+    <div class="field">
+      <label>How easy was it for others (your team, manager, other departments) to REACH YOU? *</label>
+      <div class="scale-row" data-group="reachMe"></div>
+    </div>
+    <div class="field">
+      <label>How easy was it to reach colleagues in OTHER departments you needed during the day? *</label>
+      <div class="scale-row" data-group="reachCross"></div>
+    </div>
+    <div class="field"><label>Which tools did you rely on most to communicate? (select all that apply)</label>
+      <div class="dept-checkbox-grid" id="toolsGrid" data-multi>
+        <span data-v="Email">Email</span>
+        <span data-v="Phone call">Phone call</span>
+        <span data-v="WhatsApp">WhatsApp</span>
+        <span data-v="Microsoft Teams">MS Teams</span>
+        <span data-v="Zoom">Zoom</span>
+        <span data-v="Slack">Slack</span>
+        <span data-v="Company intranet / portal">Intranet / Portal</span>
+        <span data-v="Other">Other</span>
+      </div>
+    </div>
+    <div class="field"><label>Did you miss anything urgent (a message, call, or request) because you were working remotely?</label>
+      <select id="missedUrgent">
+        <option value="">Select…</option>
+        <option>No — nothing urgent was missed</option>
+        <option>Yes — one thing</option>
+        <option>Yes — more than one thing</option>
+      </select>
+    </div>
+  </div>
+  <!-- 3. Cross-department collaboration -->
+  <div class="card">
+    <div class="sec-head"><h2>3. Working With Other Departments</h2></div>
+    <div class="field">
+      <label>Did you need to interact with any OTHER department(s) on your WFH day?</label>
+      <select id="didInteract">
+        <option value="">Select…</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No — I only worked within my own department</option>
+      </select>
+    </div>
+    <div id="deptDiffBlock" style="display:none;">
+      <div class="field">
+        <label>Which department(s) did you find DIFFICULT to work with remotely that day?</label>
+        <div class="dept-checkbox-grid" id="diffDeptGrid" data-multi>
+          <span data-v="Human Resources">Human Resources</span>
+          <span data-v="Finance &amp; Accounting">Finance &amp; Accounting</span>
+          <span data-v="Sales">Sales</span>
+          <span data-v="Marketing">Marketing</span>
+          <span data-v="Operations">Operations</span>
+          <span data-v="Customer Service / Support">Customer Service / Support</span>
+          <span data-v="Information Technology (IT)">Information Technology (IT)</span>
+          <span data-v="Administration">Administration</span>
+          <span data-v="Procurement">Procurement</span>
+          <span data-v="Legal">Legal</span>
+          <span data-v="Management / Leadership">Management / Leadership</span>
+          <span data-v="Other">Other</span>
+        </div>
+        <p class="hint">Select all that apply. Leave blank if none were difficult.</p>
+      </div>
+      <div class="field">
+        <label>How SEVERE was the difficulty with the worst-affected department?</label>
+        <div class="scale-row" data-group="diffSeverity"></div>
+        <p class="hint">1 = Minor delay / resolved quickly · 3 = Slowed my work noticeably · 5 = Blocked my work / could not reach them at all</p>
+      </div>
+      <div class="field"><label>Briefly describe what made it difficult (e.g. no response, wrong channel, waiting on approval…)</label>
+        <textarea id="diffDetail" placeholder="Example: Needed Finance approval for a payment — emailed and called but no one picked up until end of day."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Flags &amp; Concerns -->
+  <div class="card">
+    <div class="sec-head"><h2>4. Flags &amp; Concerns</h2></div>
+    <div class="field">
+      <label>Is there anything you need to flag to HR or management?</label>
+      <select id="hasFlag">
+        <option value="">Select…</option>
+        <option value="No">No — nothing to flag</option>
+        <option value="Yes">Yes — I want to flag something</option>
+      </select>
+    </div>
+    <div id="flagBlock" style="display:none;">
+      <div class="field"><label>What do you want to flag?</label>
+        <div class="dept-checkbox-grid" id="flagTypeGrid" data-multi>
+          <span data-v="Tools / equipment / system issue">Tools / equipment / system</span>
+          <span data-v="Internet / connectivity">Internet / connectivity</span>
+          <span data-v="Process / communication blocker">Process / communication blocker</span>
+          <span data-v="A person / conduct / wellbeing concern">A person / conduct / wellbeing</span>
+          <span data-v="Workload / coverage issue">Workload / coverage</span>
+          <span data-v="Something else">Something else</span>
+        </div>
+        <p class="hint">Select all that apply.</p>
+      </div>
+      <div class="field"><label>Is a specific PERSON involved? <span style="font-weight:400;color:#94a3b8;">(optional)</span></label>
+        <select id="flagPerson">
+          <option value="">Prefer not to say / N/A</option>
+          <option>Yes — a colleague in my department</option>
+          <option>Yes — a colleague in another department</option>
+          <option>Yes — a manager / supervisor</option>
+          <option>Yes — a direct report</option>
+        </select>
+      </div>
+      <div class="field"><label>Tell us more</label>
+        <textarea id="flagDetail" placeholder="Describe the issue. If a person is involved you may name them — this goes only to HR and remains confidential."></textarea>
+      </div>
+      <div class="flag-alert" id="flagAlert">Your flag goes directly to HR at <b>nayera-rasmy@blueskygroup.net</b>. If it is urgent or sensitive, please also consider contacting HR directly.</div>
+    </div>
+  </div>
+  <!-- 5. Overall effectiveness -->
+  <div class="card">
+    <div class="sec-head"><h2>5. Overall WFH-Day Effectiveness</h2></div>
+    <div class="field">
+      <label>How PRODUCTIVE were you on the WFH day compared to a normal office day? *</label>
+      <div class="scale-row" data-group="productivity"></div>
+      <p class="hint">1 = Much less productive · 3 = About the same · 5 = Much more productive</p>
+    </div>
+    <div class="field">
+      <label>Overall, how would you rate the WFH day? *</label>
+      <div class="scale-row" data-group="overall"></div>
+      <p class="hint">1 = Very poor · 3 = Acceptable · 5 = Excellent</p>
+    </div>
+    <div class="field"><label>Would you like to keep the voluntary WFH day?</label>
+      <select id="keepWfh">
+        <option value="">Select…</option>
+        <option>Yes — definitely keep it</option>
+        <option>Yes — keep it, with some changes</option>
+        <option>Neutral / no strong preference</option>
+        <option>No — I prefer working from the office</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 6. Open comments -->
+  <div class="card">
+    <div class="sec-head"><h2>6. Final Comments</h2></div>
+    <div class="field"><label>What worked well on the WFH day?</label><textarea id="workedWell" placeholder="Anything that made remote work easier…"></textarea></div>
+    <div class="field"><label>What should HR / management improve before the next WFH day?</label><textarea id="shouldImprove" placeholder="Tools, policies, communication rhythms, check-in expectations…"></textarea></div>
+  </div>
+
+  <div class="status-msg" id="statusMsg"></div>
+  <div class="anon-note">Responses go to HR only. Name field is optional — submit blank to stay anonymous.</div>
+</form>
+</div>
+
+<div class="sticky-bar">
+  <button type="button" class="btn btn-green" id="submitBtn" onclick="submitSurvey()">Submit Survey</button>
+</div>
+
+<script src="survey.js"></script>
+</body>
+</html>
