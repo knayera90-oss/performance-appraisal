@@ -1,5 +1,5 @@
 /* ================= CONFIG ================= */
-var HR_SUBMIT_URL = ""; // <-- paste your Google Apps Script /exec URL here after deploying the backend
+var HR_SUBMIT_URL = "https://script.google.com/macros/s/AKfycbweow5iRnufLQWRBC4Ia0nlSy_r0zAb04DE9ykJhXbMbfy8YcnfyK_f6xY3dADSOrwa/exec";
 /* ========================================== */
 
 var SCALE = [
