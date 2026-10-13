@@ -93,7 +93,6 @@ function showIf(selectId, blockId, triggerValue, extraShowId) {
 
 function submitSurvey() {
   var dept = document.getElementById("empDept").value;
-  var dDate = document.getElementById("wfhDate").value;
   var reachTeam = getScale("reachTeam");
   var reachMe = getScale("reachMe");
   var reachCross = getScale("reachCross");
@@ -102,7 +101,6 @@ function submitSurvey() {
   var msg = document.getElementById("statusMsg");
 
   if (!dept) { alert("Please select your department (Section 1)."); return; }
-  if (!dDate) { alert("Please pick the WFH day date (Section 1)."); return; }
   if (!reachTeam || !reachMe || !reachCross) { alert("Please answer all reachability questions in Section 2."); return; }
   if (!productivity || !overall) { alert("Please answer both effectiveness questions in Section 5."); return; }
 
@@ -111,8 +109,6 @@ function submitSurvey() {
     submittedAt: new Date().toISOString(),
     name: document.getElementById("empName").value.trim() || "(anonymous)",
     department: dept,
-    wfhDate: dDate,
-    wfhCount: document.getElementById("wfhCount").value,
     reachTeam: reachTeam,
     reachMe: reachMe,
     reachCross: reachCross,
