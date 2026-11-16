@@ -215,15 +215,13 @@ function buildGoals() {
   for (var i=1;i<=6;i++){
     var mandatory = (i<=3);
     html += '<div class="item-row"><div class="row-head"><strong>Goal '+i+(mandatory?' <span style="color:#dc2626;">*</span>':' <span style="color:#64748b;font-weight:400;">(optional)</span>')+'</strong></div>'
-      + '<div class="goal-grid">'
+      + '<div class="goal-grid" style="grid-template-columns:1fr 90px 110px;">'
       + '<div class="field" style="margin-bottom:0;"><label>2026 Goal Description'+(mandatory?' *':'')+'</label><input type="text" class="goal-desc" data-idx="'+i+'" placeholder="e.g. Achieve 120% of sales target"></div>'
       + '<div class="field" style="margin-bottom:0;"><label>Weight %</label><input type="number" class="goal-weight" data-idx="'+i+'" min="0" max="100" placeholder="%"></div>'
-      + '<div class="field" style="margin-bottom:0;"><label>Achievement (1-5)</label>'+ratingSelect("",3)+'</div>'
+      + '<div class="field" style="margin-bottom:0;"><label>Achieved Weight %'+(mandatory?' *':'')+'</label><input type="number" class="goal-achieved" data-idx="'+i+'" min="0" max="100" placeholder="0-100"></div>'
       + '</div></div>';
   }
   document.getElementById("goalsList").innerHTML = html;
-  var selects = document.querySelectorAll("#goalsList select");
-  for (var j=0;j<selects.length;j++){ selects[j].className = "goal-score"; selects[j].setAttribute("data-idx",(j+1)); }
 }
 function buildCompetencies() {
   var html = "";
@@ -271,18 +269,45 @@ function collectData() {
   for (var i=1;i<=6;i++){
     var dEl = document.querySelector('.goal-desc[data-idx="'+i+'"]');
     var wEl = document.querySelector('.goal-weight[data-idx="'+i+'"]');
-    var sEl = document.querySelector('.goal-score[data-idx="'+i+'"]');
+    var aEl = document.querySelector('.goal-achieved[data-idx="'+i+'"]');
     var desc = dEl ? dEl.value.trim() : "";
     var wt = wEl && wEl.value !== "" ? parseFloat(wEl.value) : NaN;
-    var score = sEl ? parseFloat(sEl.value) : 3;
+    var ach = aEl && aEl.value !== "" ? parseFloat(aEl.value) : NaN;
+    
     if (i <= 3 && !desc) errors.push("Goal " + i + " description (mandatory)");
-    if (desc) {
-      if (!isNaN(wt)) weightTotal += wt;
-      goals.push({desc:desc, weight:isNaN(wt)?null:wt, score:score});
-      goalSum += score; goalCount++;
+    if (i <= 3 && isNaN(wt)) errors.push("Goal " + i + " Weight % (mandatory)");
+    if (i <= 3 && isNaN(ach)) errors.push("Goal " + i + " Achieved Weight % (mandatory)");
+    
+    if (desc && !isNaN(wt) && !isNaN(ach)) {
+      // Calculate achievement ratio: (achieved weight / assigned weight) * 100%
+      // Then map to 1-5 scale
+      var ratio = wt > 0 ? (ach / wt) : 0;
+      var score;
+      if (ratio >= 0.9) score = 5;
+      else if (ratio >= 0.75) score = 4;
+      else if (ratio >= 0.5) score = 3;
+      else if (ratio >= 0.25) score = 2;
+      else score = 1;
+      
+      goals.push({
+        desc: desc, 
+        weight: wt, 
+        achievedWeight: ach,
+        achievementRatio: Math.round(ratio * 100),
+        score: score
+      });
+      weightTotal += wt;
+      goalSum += score * (wt / 100); // Weighted contribution
+      goalCount++;
     }
   }
   if (goalCount === 0) errors.push("At least Goals 1-3 must be filled in");
+  
+  // Validate goal weights total exactly 100%
+  if (goalCount > 0 && weightTotal !== 100) {
+    errors.push("Goal weight percentages must add up to exactly 100%. Current total: " + weightTotal + "%. Please adjust the weights so they equal 100%.");
+  }
+  
   if (errors.length){ alert("Please complete the following before calculating:\n\n- "+errors.join("\n- ")); return null; }
 
   var comps = [], compSum = 0;
@@ -295,7 +320,7 @@ function collectData() {
     empSig:val("empSig").trim(),
     managerName:val("managerName").trim(), managerTitle:val("managerTitle").trim(), managerSig:val("managerSig").trim(),
     reviewPeriod:val("reviewPeriod"),
-    goals:goals, goalAvg:goalSum/goalCount, goalWeightTotal:weightTotal,
+    goals:goals, goalAvg:goalSum/ (goalCount > 0 ? (weightTotal/100) : 1), goalWeightTotal:weightTotal,
     comps:comps, compAvg:compSum/COMPETENCIES.length,
     quals:quals, qualAvg:qualSum/QUALITY_ITEMS.length,
     attIncidents:num("daysLate"),
@@ -416,7 +441,7 @@ function submitToHR() {
   var goalsDetail = "", compDetail = "", qualDetail = "";
   for (var i=0;i<d.goals.length;i++){
     var g = d.goals[i];
-    goalsDetail += "Goal "+(i+1)+": "+g.desc+(g.weight!==null?" [Weight: "+g.weight+"%]":"")+" ("+g.score+"/5)\n";
+    goalsDetail += "Goal "+(i+1)+": "+g.desc+" [Weight: "+g.weight+"%, Achieved: "+g.achievedWeight+"% ("+g.achievementRatio+"%), Score: "+g.score+"/5]\n";
   }
   for (var j=0;j<d.comps.length;j++) compDetail += d.comps[j].name+": "+d.comps[j].score+"/5\n";
   for (var k=0;k<d.quals.length;k++) qualDetail += d.quals[k].name+": "+d.quals[k].score+"/5\n";
