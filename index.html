@@ -218,7 +218,7 @@ function buildGoals() {
       + '<div class="goal-grid" style="grid-template-columns:1fr 90px 110px;">'
       + '<div class="field" style="margin-bottom:0;"><label>2026 Goal Description'+(mandatory?' *':'')+'</label><input type="text" class="goal-desc" data-idx="'+i+'" placeholder="e.g. Achieve 120% of sales target"></div>'
       + '<div class="field" style="margin-bottom:0;"><label>Weight %</label><input type="number" class="goal-weight" data-idx="'+i+'" min="0" max="100" placeholder="%"></div>'
-      + '<div class="field" style="margin-bottom:0;"><label>Achieved Weight %'+(mandatory?' *':'')+'</label><input type="number" class="goal-achieved" data-idx="'+i+'" min="0" max="100" placeholder="0-100"></div>'
+      + '<div class="field" style="margin-bottom:0;"><label>Achieved Weight %'+(mandatory?' *':'')+'</label><input type="number" class="goal-achieved" data-idx="'+i+'" min="0" max="100" placeholder="e.g. 23 out of 40"></div>'
       + '</div></div>';
   }
   document.getElementById("goalsList").innerHTML = html;
