@@ -61,13 +61,13 @@
 <body>
 <header class="hero">
   <h1>AI-Powered Performance Management System</h1>
-  <p>Complete all 8 sections, then click "Calculate Results" to see the final score and submit to HR.</p>
+  <p>Complete all 10 sections, then click "Calculate Results" to see the final score and submit to HR.</p>
 </header>
 <div class="container">
   <div class="info-note">
-    <b>How it works:</b> Weighted scores are computed across the evaluation categories
-    (2026 Goals 40% &middot; Competencies 25% &middot; Quality 15% &middot; Attendance 10% &middot; Development 10%).
-    Attendance is scored automatically in the background from the reported incident count &mdash; no rating is chosen on the form.
+    <b>How it works:</b> Weighted scores are computed across 6 categories
+    (2026 Goals 40% &middot; Competencies 25% &middot; Quality 10% &middot; Attendance 10% &middot; Violations 5% &middot; Development 10%).
+    Attendance and Violations are scored automatically in the background.
     If no training was provided this year, the Development category is excluded so the employee is not penalized.
     After submission, the detailed breakdown, AI insights and recommendations are sent to <b>HR only</b> &mdash; staff see the final total score only.
   </div>
@@ -95,35 +95,68 @@
 
   <!-- SECTION 3: 2026 Goals Evaluation -->
   <div class="card">
-    <div class="sec-head"><h2>3. Evaluating 2026 Goals</h2><span class="weight">Weight: 40%</span></div>
+    <div class="sec-head"><h2>2. Evaluating 2026 Goals</h2><span class="weight">Weight: 40%</span></div>
     <p class="hint">Enter up to 6 goals for 2026. <b>Goals 1&ndash;3 are mandatory.</b> For each goal, enter the achieved percentage (0-100%). The system calculates the achievement score automatically.</p>
     <div id="goalsList"></div>
   </div>
 
   <!-- SECTION 4: Core Competencies -->
   <div class="card">
-    <div class="sec-head"><h2>4. Core Competencies</h2><span class="weight">Weight: 25%</span></div>
+    <div class="sec-head"><h2>3. Core Competencies</h2><span class="weight">Weight: 25%</span></div>
     <p class="hint">Rate <b>every</b> competency 1&ndash;5 based on observed behavior during the review period. All competencies are mandatory.</p>
     <div id="compList"></div>
   </div>
 
   <!-- SECTION 5: Quality of Work -->
   <div class="card">
-    <div class="sec-head"><h2>5. Quality of Work</h2><span class="weight">Weight: 15%</span></div>
+    <div class="sec-head"><h2>4. Quality of Work</h2><span class="weight">Weight: 10%</span></div>
     <p class="hint">Rate <b>every</b> quality item 1&ndash;5. All items are mandatory.</p>
     <div id="qualList"></div>
   </div>
 
-  <!-- SECTION 6: Attendance Discipline -->
+  <!-- SECTION 5: Attendance -->
   <div class="card">
-    <div class="sec-head"><h2>6. Attendance Discipline</h2><span class="weight">Weight: 10%</span></div>
-    <p class="hint">Enter the number of attendance discipline incidents during the review period (e.g. late arrivals, unreported absences). The attendance score is calculated automatically by the system &mdash; you do not choose a rating. <b>HR will review and verify this count for accuracy</b> and may adjust it after submission.</p>
-    <div class="field"><label>Attendance Discipline (number of incidents) *</label><input type="number" id="daysLate" min="0" value="0"></div>
+    <div class="sec-head"><h2>5. Attendance</h2><span class="weight">Weight: 10%</span></div>
+    <div class="field">
+      <p class="hint">Rate the employee's overall attendance commitment 1&ndash;10 (10 = perfect, 1 = very poor). The system converts this to a score automatically &mdash; you do not choose the final rating.</p>
+      <label>Attendance Commitment Rate (1&ndash;10) *</label>
+      <select id="attCommitment">
+        <option value="" selected disabled>-- Select --</option>
+        <option value="10">10 - Perfect commitment</option>
+        <option value="9">9</option>
+        <option value="8">8</option>
+        <option value="7">7</option>
+        <option value="6">6</option>
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1 - Very poor</option>
+      </select>
+    </div>
   </div>
 
-  <!-- SECTION 7: Development & Training -->
+  <!-- SECTION 6: Violations & Penalties -->
   <div class="card">
-    <div class="sec-head"><h2>7. Development &amp; Training</h2><span class="weight">Weight: 10%</span></div>
+    <div class="sec-head"><h2>6. Violations &amp; Penalties</h2><span class="weight">Weight: 5%</span></div>
+    <div class="field">
+      <p class="hint">Number of violations or penalties submitted to HR during the review period (if none, enter 0). Penalties apply automatically: 1&ndash;2 violations = &minus;0.5, 3&ndash;5 = &minus;1, 6&ndash;10 = &minus;2, 10+ = score drops to 1. <b>HR will review and verify this count for accuracy.</b></p>
+      <label>Number of Violations / Penalties Submitted to HR *</label><input type="number" id="violations" min="0" value="0">
+    </div>
+  </div>
+
+  <!-- SECTION 7: 2027 Objectives -->
+  <div class="card">
+    <div class="sec-head"><h2>7. 2027 Objectives</h2></div>
+    <div class="field">
+      <p class="hint">The employee lists their objectives for 2027 &mdash; at least one objective is mandatory.</p>
+      <label>2027 Objectives *</label><textarea id="objectives2027" placeholder="List your objectives for 2027 (one per line)..."></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 8: Development & Training -->
+  <div class="card">
+    <div class="sec-head"><h2>8. Development &amp; Training</h2><span class="weight">Weight: 10%</span></div>
     <p class="hint">If the employee was not offered any training this year, select "No" &mdash; the Development category will be excluded from the score so they are not penalized for something outside their control.</p>
     <div class="field"><label>Did the employee receive training / development opportunities this year? *</label>
       <div class="radio-row">
@@ -149,9 +182,9 @@
     </div>
   </div>
 
-  <!-- SECTION 8: Direct Manager Comments -->
+  <!-- SECTION 9: Direct Manager Comments -->
   <div class="card">
-    <div class="sec-head"><h2>8. Direct Manager Comments</h2></div>
+    <div class="sec-head"><h2>9. Direct Manager Comments</h2></div>
     <div class="field">
       <p class="hint">Describe what this employee does exceptionally well.</p>
       <label>Key Strengths *</label><textarea id="strengthsText"></textarea>
@@ -166,9 +199,9 @@
     </div>
   </div>
 
-  <!-- SECTION 9: Direct Manager Sign-off -->
+  <!-- SECTION 10: Direct Manager Sign-off -->
   <div class="card">
-    <div class="sec-head"><h2>9. Direct Manager Sign-off</h2></div>
+    <div class="sec-head"><h2>10. Direct Manager Sign-off</h2></div>
     <div class="grid2">
       <div class="field"><label>Direct Manager Name *</label><input type="text" id="managerName" placeholder="Direct manager's full name"></div>
       <div class="field"><label>Direct Manager Title *</label><input type="text" id="managerTitle" placeholder="e.g. Sales Manager"></div>
@@ -194,7 +227,7 @@
 /* ================= CONFIG ================= */
 var HR_SUBMIT_URL = "https://script.google.com/macros/s/AKfycbzUlzrH_ORZd91MKjlLmSN_XBZVcXacQPOkK-Z_R-twH6z5GC8iiD4rSmLj59zSggHL/exec";
 
-var WEIGHTS = { goals:0.40, comp:0.25, qual:0.15, att:0.10, dev:0.10 };
+var WEIGHTS = { goals:0.40, comp:0.25, qual:0.10, att:0.10, violations:0.05, dev:0.10 };
 
 var COMPETENCIES = [
   "Communication Skills", "Teamwork & Collaboration", "Problem Solving",
@@ -261,6 +294,9 @@ function collectData() {
   if (!val("managerName").trim()) errors.push("Direct Manager Name");
   if (!val("managerTitle").trim()) errors.push("Direct Manager Title");
   if (!val("managerSig").trim()) errors.push("Direct Manager Signature");
+  if (!val("attCommitment")) errors.push("Attendance Commitment Rate (1-10)");
+  if (val("violations").trim() === "") errors.push("Number of Violations / Penalties Submitted to HR");
+  if (!val("objectives2027").trim()) errors.push("2027 Objectives");
 
   var trainingSel = document.querySelector('input[name="trainingYesNo"]:checked');
   if (!trainingSel) errors.push("Training received question (Yes/No)");
@@ -313,7 +349,9 @@ function collectData() {
     goals:goals, goalAvg:goalSum/goalCount,
     comps:comps, compAvg:compSum/COMPETENCIES.length,
     quals:quals, qualAvg:qualSum/QUALITY_ITEMS.length,
-    attIncidents:num("daysLate"),
+    attCommitment:parseFloat(val("attCommitment")),
+    violations:num("violations"),
+    objectives2027:val("objectives2027").trim(),
     trainingReceived:trainingReceived,
     devScore:trainingReceived ? parseFloat(val("devScore")) : null,
     trainingNotes:val("trainingNotes").trim(), trainingNeeds:val("trainingNeeds").trim(),
@@ -321,25 +359,33 @@ function collectData() {
   };
 }
 /* ============ SCORING ENGINE (background) ============ */
-function attendanceScoreFromIncidents(n) {
-  if (n <= 0) return 5;
-  if (n <= 2) return 4;
-  if (n <= 5) return 3;
-  if (n <= 10) return 2;
+function attendanceScore(d) {
+  // Commitment rate 1-10, divided by 2 to fit 1-5 scale
+  return Math.max(1, Math.round((d.attCommitment / 2) * 100) / 100);
+}
+
+function violationsScore(d) {
+  // Violations penalty: 0=5, 1-2=4.5, 3-5=4, 6-10=3, 10+=1
+  var v = d.violations;
+  if (v === 0) return 5;
+  if (v <= 2) return 4.5;
+  if (v <= 5) return 4;
+  if (v <= 10) return 3;
   return 1;
 }
 
 function computeScores(d) {
-  var attScore = attendanceScoreFromIncidents(d.attIncidents);
+  var attScore = attendanceScore(d);
+  var violScore = violationsScore(d);
   var penalties = [];
-  if (d.attIncidents > 10) penalties.push("Attendance penalty applied: " + d.attIncidents + " discipline incidents reported (>10).");
-  else if (d.attIncidents > 5) penalties.push("Attendance watch zone: " + d.attIncidents + " discipline incidents reported.");
+  if (d.violations > 0) penalties.push("Violations: " + d.violations + " violation(s)/penalties reported (score " + violScore + "/5 in the Violations category).");
+  if (d.attCommitment <= 3) penalties.push("Low attendance commitment rate (" + d.attCommitment + "/10) — flagged for HR review.");
 
-  var weights = { goals:WEIGHTS.goals, comp:WEIGHTS.comp, qual:WEIGHTS.qual, att:WEIGHTS.att, dev:(d.trainingReceived ? WEIGHTS.dev : 0) };
-  var wTotal = weights.goals + weights.comp + weights.qual + weights.att + weights.dev;
+  var weights = { goals:WEIGHTS.goals, comp:WEIGHTS.comp, qual:WEIGHTS.qual, att:WEIGHTS.att, viol:WEIGHTS.violations, dev:(d.trainingReceived ? WEIGHTS.dev : 0) };
+  var wTotal = weights.goals + weights.comp + weights.qual + weights.att + weights.viol + weights.dev;
 
   var final = (d.goalAvg*weights.goals + d.compAvg*weights.comp + d.qualAvg*weights.qual
-            + attScore*weights.att + (d.trainingReceived ? d.devScore*weights.dev : 0)) / wTotal;
+            + attScore*weights.att + violScore*weights.viol + (d.trainingReceived ? d.devScore*weights.dev : 0)) / wTotal;
 
   var band;
   if (final >= 4.5) band = {grade:"A", label:"A - Exceptional Performance", color:"#10b981"};
@@ -348,13 +394,14 @@ function computeScores(d) {
   else if (final >= 1.5) band = {grade:"D", label:"D - Needs Improvement", color:"#f97316"};
   else band = {grade:"E", label:"E - PIP Required", color:"#ef4444"};
 
-  return { attScore:attScore, penalties:penalties, finalScore:Math.round(final*100)/100, band:band, devExcluded:!d.trainingReceived };
+  return { attScore:attScore, violScore:violScore, penalties:penalties, finalScore:Math.round(final*100)/100, band:band, devExcluded:!d.trainingReceived };
 }
 
 function generateInsights(d, s) {
   var cats = [
     {name:"2026 Goals", avg:d.goalAvg}, {name:"Core Competencies", avg:d.compAvg},
-    {name:"Quality of Work", avg:d.qualAvg}, {name:"Attendance Discipline", avg:s.attScore}
+    {name:"Quality of Work", avg:d.qualAvg}, {name:"Attendance", avg:s.attScore},
+    {name:"Violations & Penalties", avg:s.violScore}
   ];
   if (d.trainingReceived) cats.push({name:"Development & Training", avg:d.devScore});
   cats.sort(function(a,b){return b.avg-a.avg;});
@@ -362,7 +409,9 @@ function generateInsights(d, s) {
   insights.push("<b>Top strength:</b> "+cats[0].name+" ("+cats[0].avg.toFixed(2)+"/5) is the strongest area this period.");
   insights.push("<b>Biggest risk:</b> "+cats[cats.length-1].name+" ("+cats[cats.length-1].avg.toFixed(2)+"/5) needs the most attention.");
   if (s.devExcluded) insights.push("<b>Development excluded:</b> No training was offered this year, so the Development category was excluded from the final score (not counted against the employee).");
-  if (d.attIncidents > 5) insights.push("<b>Attendance flag:</b> "+d.attIncidents+" discipline incidents reported (HR to review/verify).");
+  if (d.violations > 0) insights.push("<b>Violations flag:</b> "+d.violations+" violation(s)/penalties submitted to HR (HR to review/verify).");
+  if (d.attCommitment <= 3) insights.push("<b>Low commitment:</b> Attendance commitment rate of "+d.attCommitment+"/10 is below expectations.");
+  insights.push("<b>2027 Objectives (employee):</b> "+(d.objectives2027 || "None listed."));
   var lowComps = [];
   for (var i=0;i<d.comps.length;i++){ if (d.comps[i].score <= 2) lowComps.push(d.comps[i].name); }
   if (lowComps.length) insights.push("<b>Competency gaps:</b> "+lowComps.join(", ")+" rated 2 or below.");
@@ -385,7 +434,8 @@ function generateRecs(d, s) {
   else { recs.push("<b>Performance Improvement Plan (PIP) required.</b> Document issues and set a 60-90 day PIP.");
                  recs.push("HR should be involved in all PIP meetings and documentation."); }
   if (d.trainingNeeds) recs.push("Address the Training Needs identified by the direct manager in next year's plan.");
-  if (d.attIncidents > 5) recs.push("Review attendance discipline record with the employee; document the discussion.");
+  if (d.violations > 0) recs.push("Review the "+d.violations+" violation(s)/penalties with the employee and ensure HR documentation is up to date.");
+  if (d.objectives2027) recs.push("Review and align on the employee's 2027 objectives in the next goal-setting session.");
   return recs;
 }
 
@@ -442,8 +492,11 @@ function submitToHR() {
     reviewPeriod:d.reviewPeriod,
     finalScore:s.finalScore.toFixed(2), ratingLabel:s.band.label, ratingColor:s.band.color,
     goalAvg:d.goalAvg.toFixed(2), compAvg:d.compAvg.toFixed(2), qualAvg:d.qualAvg.toFixed(2),
-    attAvg:s.attScore.toFixed(2), devAvg:(d.trainingReceived ? d.devScore.toFixed(2) : "N/A (no training offered)"),
-    daysAbsent:0, daysLate:d.attIncidents,
+    attAvg:s.attScore.toFixed(2), violAvg:s.violScore.toFixed(2),
+    devAvg:(d.trainingReceived ? d.devScore.toFixed(2) : "N/A (no training offered)"),
+    daysAbsent:0, daysLate:d.violations,
+    attCommitment:d.attCommitment, violations:d.violations,
+    objectives2027:d.objectives2027,
     goalsDetail:goalsDetail, compDetail:compDetail, qualDetail:qualDetail,
     trainingReceived:(d.trainingReceived ? "Yes" : "No"),
     trainingNotes:d.trainingNotes, trainingNeeds:d.trainingNeeds,
