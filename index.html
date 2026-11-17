@@ -80,12 +80,10 @@
       <div class="field"><label>Job Title *</label><input type="text" id="empRole" placeholder="e.g. Sales Executive"></div>
       <div class="field"><label>Department *</label><input type="text" id="empDept" placeholder="e.g. Sales"></div>
       <div class="field">
-        <p class="hint">Select the review period covered by this appraisal.</p>
+        <p class="hint">Review period for this appraisal cycle.</p>
         <label>Review Period *</label>
         <select id="reviewPeriod">
           <option value="Jan-Dec 2026" selected>Jan-Dec 2026</option>
-          <option value="Jan-Jun 2026">Jan-Jun 2026</option>
-          <option value="Jul-Dec 2026">Jul-Dec 2026</option>
         </select>
       </div>
       <div class="field">
@@ -95,25 +93,11 @@
     </div>
   </div>
 
-  <!-- SECTION 2: Direct Manager -->
-  <div class="card">
-    <div class="sec-head"><h2>2. Direct Manager</h2></div>
-    <div class="grid2">
-      <div class="field"><label>Direct Manager Name *</label><input type="text" id="managerName" placeholder="Direct manager's full name"></div>
-      <div class="field"><label>Direct Manager Title *</label><input type="text" id="managerTitle" placeholder="e.g. Sales Manager"></div>
-      <div class="field">
-        <p class="hint">The direct manager types their full name below &mdash; this acts as their electronic signature.</p>
-        <label>Direct Manager Signature *</label><input type="text" id="managerSig" placeholder="Direct manager's full name as signature">
-      </div>
-    </div>
-  </div>
   <!-- SECTION 3: 2026 Goals Evaluation -->
   <div class="card">
     <div class="sec-head"><h2>3. Evaluating 2026 Goals</h2><span class="weight">Weight: 40%</span></div>
-    <p class="hint">Enter up to 6 goals for 2026. <b>Goals 1&ndash;3 are mandatory.</b> For each goal, enter its weight % (all weights must add up to 100%) and the achieved weight %. The system calculates the achievement score automatically.</p>
+    <p class="hint">Enter up to 6 goals for 2026. <b>Goals 1&ndash;3 are mandatory.</b> For each goal, enter the achieved percentage (0-100%). The system calculates the achievement score automatically.</p>
     <div id="goalsList"></div>
-    <div id="weightError" class="weight-error"></div>
-    <div id="weightOk" class="weight-ok">✅ Goal weights add up to 100% — correct!</div>
   </div>
 
   <!-- SECTION 4: Core Competencies -->
@@ -170,15 +154,28 @@
     <div class="sec-head"><h2>8. Direct Manager Comments</h2></div>
     <div class="field">
       <p class="hint">Describe what this employee does exceptionally well.</p>
-      <label>Key Strengths</label><textarea id="strengthsText"></textarea>
+      <label>Key Strengths *</label><textarea id="strengthsText"></textarea>
     </div>
     <div class="field">
       <p class="hint">Describe where this employee should focus their development.</p>
-      <label>Areas for Improvement</label><textarea id="improveText"></textarea>
+      <label>Areas for Improvement *</label><textarea id="improveText"></textarea>
     </div>
     <div class="field">
       <p class="hint">Write your overall assessment of the employee's performance this period.</p>
-      <label>Overall Narrative</label><textarea id="narrativeText"></textarea>
+      <label>Overall Narrative *</label><textarea id="narrativeText"></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 9: Direct Manager Sign-off -->
+  <div class="card">
+    <div class="sec-head"><h2>9. Direct Manager Sign-off</h2></div>
+    <div class="grid2">
+      <div class="field"><label>Direct Manager Name *</label><input type="text" id="managerName" placeholder="Direct manager's full name"></div>
+      <div class="field"><label>Direct Manager Title *</label><input type="text" id="managerTitle" placeholder="e.g. Sales Manager"></div>
+      <div class="field">
+        <p class="hint">The direct manager types their full name below &mdash; this acts as their electronic signature.</p>
+        <label>Direct Manager Signature *</label><input type="text" id="managerSig" placeholder="Direct manager's full name as signature">
+      </div>
     </div>
   </div>
 
@@ -219,10 +216,9 @@ function buildGoals() {
   for (var i=1;i<=6;i++){
     var mandatory = (i<=3);
     html += '<div class="item-row"><div class="row-head"><strong>Goal '+i+(mandatory?' <span style="color:#dc2626;">*</span>':' <span style="color:#64748b;font-weight:400;">(optional)</span>')+'</strong></div>'
-      + '<div class="goal-grid" style="grid-template-columns:1fr 90px 110px;">'
+      + '<div class="goal-grid" style="grid-template-columns:1fr 120px;">'
       + '<div class="field" style="margin-bottom:0;"><label>2026 Goal Description'+(mandatory?' *':'')+'</label><input type="text" class="goal-desc" data-idx="'+i+'" placeholder="e.g. Achieve 120% of sales target"></div>'
-      + '<div class="field" style="margin-bottom:0;"><label>Weight %</label><input type="number" class="goal-weight" data-idx="'+i+'" min="0" max="100" placeholder="%"></div>'
-      + '<div class="field" style="margin-bottom:0;"><label>Achieved Weight %'+(mandatory?' *':'')+'</label><input type="number" class="goal-achieved" data-idx="'+i+'" min="0" max="100" placeholder="e.g. 23 out of 40"></div>'
+      + '<div class="field" style="margin-bottom:0;"><label>Achieved %'+(mandatory?' *':'')+'</label><input type="number" class="goal-achieved" data-idx="'+i+'" min="0" max="100" placeholder="0-100"></div>'
       + '</div></div>';
   }
   document.getElementById("goalsList").innerHTML = html;
@@ -250,41 +246,7 @@ function toggleTraining() {
   else box.classList.add("hidden");
 }
 
-// Live weight validation
-function validateWeights() {
-  var total = 0;
-  var filled = 0;
-  for (var i=1;i<=6;i++){
-    var wEl = document.querySelector('.goal-weight[data-idx="'+i+'"]');
-    if (wEl && wEl.value !== "") {
-      total += parseFloat(wEl.value) || 0;
-      filled++;
-    }
-  }
-  var err = document.getElementById("weightError");
-  var ok = document.getElementById("weightOk");
-  if (filled === 0) {
-    err.style.display = "none";
-    ok.style.display = "none";
-    return;
-  }
-  if (total === 100) {
-    err.style.display = "none";
-    ok.style.display = "block";
-  } else {
-    ok.style.display = "none";
-    err.style.display = "block";
-    err.innerHTML = "⚠️ Goal weights must add up to exactly 100%. <b>Current total: " + total + "%</b>. Please adjust the weights.";
-  }
-}
 
-// Attach live validation to all weight inputs (called after goals are built)
-function attachWeightValidation() {
-  var inputs = document.querySelectorAll('.goal-weight');
-  for (var i=0;i<inputs.length;i++){
-    inputs[i].addEventListener("input", validateWeights);
-  }
-}
 
 /* ============ DATA COLLECTION ============ */
 function val(id){ var el=document.getElementById(id); return el ? el.value : ""; }
@@ -305,48 +267,36 @@ function collectData() {
   var trainingReceived = trainingSel ? (trainingSel.value === "yes") : null;
   if (!val("trainingNeeds").trim()) errors.push("Training Needs");
 
-  var goals = [], goalSum = 0, goalCount = 0, weightTotal = 0;
+  var goals = [], goalSum = 0, goalCount = 0;
   for (var i=1;i<=6;i++){
     var dEl = document.querySelector('.goal-desc[data-idx="'+i+'"]');
-    var wEl = document.querySelector('.goal-weight[data-idx="'+i+'"]');
     var aEl = document.querySelector('.goal-achieved[data-idx="'+i+'"]');
     var desc = dEl ? dEl.value.trim() : "";
-    var wt = wEl && wEl.value !== "" ? parseFloat(wEl.value) : NaN;
     var ach = aEl && aEl.value !== "" ? parseFloat(aEl.value) : NaN;
-    
+
     if (i <= 3 && !desc) errors.push("Goal " + i + " description (mandatory)");
-    if (i <= 3 && isNaN(wt)) errors.push("Goal " + i + " Weight % (mandatory)");
-    if (i <= 3 && isNaN(ach)) errors.push("Goal " + i + " Achieved Weight % (mandatory)");
-    
-    if (desc && !isNaN(wt) && !isNaN(ach)) {
-      // Calculate achievement ratio: (achieved weight / assigned weight) * 100%
-      // Then map to 1-5 scale
-      var ratio = wt > 0 ? (ach / wt) : 0;
+    if (i <= 3 && isNaN(ach)) errors.push("Goal " + i + " Achieved % (mandatory)");
+
+    if (desc && !isNaN(ach)) {
+      if (ach > 100) errors.push("Goal " + i + " Achieved % cannot exceed 100%");
+      // Map achieved % directly to 1-5 scale
       var score;
-      if (ratio >= 0.9) score = 5;
-      else if (ratio >= 0.75) score = 4;
-      else if (ratio >= 0.5) score = 3;
-      else if (ratio >= 0.25) score = 2;
+      if (ach >= 90) score = 5;
+      else if (ach >= 75) score = 4;
+      else if (ach >= 50) score = 3;
+      else if (ach >= 25) score = 2;
       else score = 1;
-      
-      goals.push({
-        desc: desc, 
-        weight: wt, 
-        achievedWeight: ach,
-        achievementRatio: Math.round(ratio * 100),
-        score: score
-      });
-      weightTotal += wt;
-      goalSum += score * (wt / 100); // Weighted contribution
-      goalCount++;
+
+      goals.push({ desc: desc, achieved: ach, score: score });
+      goalSum += score; goalCount++;
     }
   }
   if (goalCount === 0) errors.push("At least Goals 1-3 must be filled in");
   
-  // Validate goal weights total exactly 100%
-  if (goalCount > 0 && weightTotal !== 100) {
-    errors.push("Goal weight percentages must add up to exactly 100%. Current total: " + weightTotal + "%. Please adjust the weights so they equal 100%.");
-  }
+  // Validate mandatory comments
+  if (!val("strengthsText").trim()) errors.push("Key Strengths (Direct Manager Comments)");
+  if (!val("improveText").trim()) errors.push("Areas for Improvement (Direct Manager Comments)");
+  if (!val("narrativeText").trim()) errors.push("Overall Narrative (Direct Manager Comments)");
   
   if (errors.length){ alert("Please complete the following before calculating:\n\n- "+errors.join("\n- ")); return null; }
 
@@ -360,7 +310,7 @@ function collectData() {
     empSig:val("empSig").trim(),
     managerName:val("managerName").trim(), managerTitle:val("managerTitle").trim(), managerSig:val("managerSig").trim(),
     reviewPeriod:val("reviewPeriod"),
-    goals:goals, goalAvg:goalSum/ (goalCount > 0 ? (weightTotal/100) : 1), goalWeightTotal:weightTotal,
+    goals:goals, goalAvg:goalSum/goalCount,
     comps:comps, compAvg:compSum/COMPETENCIES.length,
     quals:quals, qualAvg:qualSum/QUALITY_ITEMS.length,
     attIncidents:num("daysLate"),
@@ -481,7 +431,7 @@ function submitToHR() {
   var goalsDetail = "", compDetail = "", qualDetail = "";
   for (var i=0;i<d.goals.length;i++){
     var g = d.goals[i];
-    goalsDetail += "Goal "+(i+1)+": "+g.desc+" [Weight: "+g.weight+"%, Achieved: "+g.achievedWeight+"% ("+g.achievementRatio+"%), Score: "+g.score+"/5]\n";
+    goalsDetail += "Goal "+(i+1)+": "+g.desc+" [Achieved: "+g.achieved+"%, Score: "+g.score+"/5]\n";
   }
   for (var j=0;j<d.comps.length;j++) compDetail += d.comps[j].name+": "+d.comps[j].score+"/5\n";
   for (var k=0;k<d.quals.length;k++) qualDetail += d.quals[k].name+": "+d.quals[k].score+"/5\n";
@@ -520,7 +470,6 @@ function submitToHR() {
 buildGoals();
 buildCompetencies();
 buildQuality();
-attachWeightValidation();
 </script>
 </body>
 </html>
