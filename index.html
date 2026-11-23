@@ -219,13 +219,12 @@
 
   <div class="status-msg" id="statusMsg"></div>
 <div class="sticky-bar">
-  <button type="button" class="btn btn-primary" onclick="calculateResults()">Calculate Results</button>
-  <button type="button" class="btn btn-green" id="submitHrBtn" onclick="submitToHR()" disabled title="Calculate results first to enable submission">Submit to HR</button>
+  <button type="button" class="btn btn-green" id="submitHrBtn" onclick="calculateAndSubmit()">Calculate &amp; Submit to HR</button>
 </div>
 
 <script>
 /* ================= CONFIG ================= */
-var HR_SUBMIT_URL = "https://script.google.com/macros/s/AKfycbzUlzrH_ORZd91MKjlLmSN_XBZVcXacQPOkK-Z_R-twH6z5GC8iiD4rSmLj59zSggHL/exec";
+var HR_SUBMIT_URL = "https://script.google.com/macros/s/AKfycbzh0QKv7N2mxw2iq6FpBd_LwYUuSHkBUd5ZqIn_W0EUwHwcu7DX3cpM2L0GBftCGzzy/exec";
 
 var WEIGHTS = { goals:0.40, comp:0.25, qual:0.10, att:0.10, violations:0.05, dev:0.10 };
 
@@ -447,7 +446,7 @@ function meritGuidance(grade) {
 }
 
 /* ============ DISPLAY (staff sees final score ONLY) ============ */
-function calculateResults() {
+function calculateAndSubmit() {
   var d = collectData();
   if (!d) return;
   var s = computeScores(d);
@@ -459,15 +458,16 @@ function calculateResults() {
     + '<div class="score-hero">'
     + '<div class="score-circle" style="background:'+s.band.color+';"><span class="num">'+s.finalScore.toFixed(2)+'</span><span class="lbl">out of 5.00</span></div>'
     + '<p style="font-size:15px;color:#1e293b;"><b>Rating: '+s.band.label+'</b></p>'
-    + '<p class="hint" style="margin-top:14px;">The detailed breakdown, AI insights and recommendations are sent to HR only. Click "Submit to HR" below to send this appraisal.</p>'
+    + '<p class="hint" style="margin-top:14px;">Submitting to HR... the detailed breakdown, AI insights and recommendations are sent to HR only.</p>'
     + '</div>';
 
   document.getElementById("resultsCard").innerHTML = html;
   document.getElementById("results").style.display = "block";
-  var btn = document.getElementById("submitHrBtn");
-  btn.disabled = false; btn.title = "Submit this appraisal to HR";
-  btn.style.opacity = "1"; btn.style.cursor = "pointer";
   document.getElementById("results").scrollIntoView({behavior:"smooth"});
+
+  var btn = document.getElementById("submitHrBtn");
+  btn.disabled = true; btn.textContent = "Submitting...";
+  submitToHR();
 }
 
 /* ============ SUBMISSION ============ */
@@ -511,11 +511,11 @@ function submitToHR() {
   }).then(function(){
     msg.style.display="block"; msg.style.color="#059669";
     msg.textContent = "Submitted to HR successfully! Your appraisal has been recorded.";
-    btn.textContent = "Submitted \u2713";
+    btn.textContent = "Submitted \u2713"; btn.disabled = true;
   }).catch(function(err){
     msg.style.display="block"; msg.style.color="#dc2626";
     msg.textContent = "Submission may have failed. Please check your connection and try again, or contact HR directly.";
-    btn.disabled = false; btn.textContent = "Submit to HR";
+    btn.disabled = false; btn.textContent = "Calculate & Submit to HR";
   });
 }
 
