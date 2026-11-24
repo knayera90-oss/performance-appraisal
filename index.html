@@ -194,7 +194,6 @@
       <label>Overall Narrative *</label><textarea id="narrativeText"></textarea>
     </div>
     <div class="grid2">
-      <div class="field"><label>Direct Manager Name *</label><input type="text" id="managerName" placeholder="Direct manager's name"></div>
       <div class="field"><label>Direct Manager Title *</label><input type="text" id="managerTitle" placeholder="e.g. Sales Manager"></div>
       <div class="field">
         <p class="hint">Type the direct manager's name below &mdash; this acts as their electronic signature.</p>
@@ -281,7 +280,6 @@ function collectData() {
   if (!val("empRole").trim()) errors.push("Job Title");
   if (!val("empDept").trim()) errors.push("Department");
   if (!val("empSig").trim()) errors.push("Employee Signature");
-  if (!val("managerName").trim()) errors.push("Direct Manager Name");
   if (!val("managerTitle").trim()) errors.push("Direct Manager Title");
   if (!val("managerSig").trim()) errors.push("Direct Manager Signature");
   if (!val("attCommitment")) errors.push("Attendance Commitment Rate (1-5)");
@@ -334,7 +332,7 @@ function collectData() {
   return {
     empName:val("empName").trim(), empRole:val("empRole").trim(), empDept:val("empDept").trim(),
     empSig:val("empSig").trim(),
-    managerName:val("managerName").trim(), managerTitle:val("managerTitle").trim(), managerSig:val("managerSig").trim(),
+    managerTitle:val("managerTitle").trim(), managerSig:val("managerSig").trim(),
     reviewPeriod:val("reviewPeriod"),
     goals:goals, goalAvg:goalSum/goalCount,
     comps:comps, compAvg:compSum/COMPETENCIES.length,
@@ -479,7 +477,7 @@ function submitToHR() {
 
   var payload = {
     empName:d.empName, empRole:d.empRole, empDept:d.empDept, empSig:d.empSig,
-    reviewerName:d.managerName, managerTitle:d.managerTitle, managerSig:d.managerSig,
+    reviewerName:d.managerSig, managerTitle:d.managerTitle, managerSig:d.managerSig,
     reviewPeriod:d.reviewPeriod,
     finalScore:s.finalScore.toFixed(2), ratingLabel:s.band.label, ratingColor:s.band.color,
     goalAvg:d.goalAvg.toFixed(2), compAvg:d.compAvg.toFixed(2), qualAvg:d.qualAvg.toFixed(2),
