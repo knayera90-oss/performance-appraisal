@@ -61,15 +61,15 @@
 <body>
 <header class="hero">
   <h1>AI-Powered Performance Management System</h1>
-  <p>Complete all 10 sections, then click "Calculate Results" to see the final score and submit to HR.</p>
+  <p>Complete all 9 sections, then click "Calculate Results" to see the final score and submit to HR.</p>
 </header>
 <div class="container">
   <div class="info-note">
-    <b>How it works:</b> Weighted scores are computed across 6 categories
-    (2026 Goals 40% &middot; Competencies 25% &middot; Quality 10% &middot; Attendance 10% &middot; Violations 5% &middot; Development 10%).
-    Attendance and Violations are scored automatically in the background.
-    If no training was provided this year, the Development category is excluded so the employee is not penalized.
-    After submission, the detailed breakdown, AI insights and recommendations are sent to <b>HR only</b> &mdash; staff see the final total score only.
+  <b>How it works:</b> Weighted scores are computed across 6 categories
+  (2026 Goals 40% &middot; Competencies 25% &middot; Quality 10% &middot; Attendance 10% &middot; Violations 5% &middot; Development 10%).
+  Attendance and Violations are scored automatically in the background.
+  If no training was provided this year, the Development category is excluded.
+  After submission, the detailed breakdown, AI insights and recommendations are sent to <b>HR only</b> &mdash; staff see the final total score only.
   </div>
 
   <!-- SECTION 1: Employee Information -->
@@ -140,16 +140,16 @@
   <div class="card">
     <div class="sec-head"><h2>6. Violations &amp; Penalties</h2><span class="weight">Weight: 5%</span></div>
     <div class="field">
-      <p class="hint">Number of violations or penalties submitted to HR during the review period (if none, enter 0). Penalties apply automatically: 1&ndash;2 violations = &minus;0.5, 3&ndash;5 = &minus;1, 6&ndash;10 = &minus;2, 10+ = score drops to 1. <b>HR will review and verify this count for accuracy.</b></p>
-      <label>Number of Violations / Penalties Submitted to HR *</label><input type="number" id="violations" min="0" value="0">
-    </div>
+          <p class="hint">Enter the number of violations or penalties submitted to HR during the review period. If none, enter 0. <b>HR will review and verify this count for accuracy.</b></p>
+          <label>Number of Violations / Penalties Submitted to HR *</label><input type="number" id="violations" min="0" value="" placeholder="0">
+        </div>
   </div>
 
   <!-- SECTION 7: 2027 Objectives -->
   <div class="card">
     <div class="sec-head"><h2>7. 2027 Objectives</h2></div>
     <div class="field">
-      <p class="hint">The employee lists their objectives for 2027 &mdash; at least one objective is mandatory.</p>
+      <p class="hint">The employee lists their objectives for 2027.</p>
       <label>2027 Objectives *</label><textarea id="objectives2027" placeholder="List your objectives for 2027 (one per line)..."></textarea>
     </div>
   </div>
@@ -157,7 +157,7 @@
   <!-- SECTION 8: Development & Training -->
   <div class="card">
     <div class="sec-head"><h2>8. Development &amp; Training</h2><span class="weight">Weight: 10%</span></div>
-    <p class="hint">If the employee was not offered any training this year, select "No" &mdash; the Development category will be excluded from the score so they are not penalized for something outside their control.</p>
+    <p class="hint">If the employee was not offered any training this year, select "No" &mdash; the Development category will be excluded from the score.</p>
     <div class="field"><label>Did the employee receive training / development opportunities this year? *</label>
       <div class="radio-row">
         <label><input type="radio" name="trainingYesNo" value="yes" onchange="toggleTraining()"> Yes</label>
@@ -174,7 +174,7 @@
           <option value="1">1 - No engagement</option>
         </select>
       </div>
-      <div class="field"><label>Training &amp; Development Notes</label><textarea id="trainingNotes" placeholder="Courses completed, certifications, skills gained..."></textarea></div>
+      <div class="field"><label>Courses, Certifications, Skills Gained</label><textarea id="trainingNotes" placeholder="Courses, certifications, skills gained this year..."></textarea></div>
     </div>
     <div class="field">
       <p class="hint">Mandatory for the direct manager to complete &mdash; regardless of whether training was received or not.</p>
@@ -185,6 +185,7 @@
   <!-- SECTION 9: Direct Manager Comments -->
   <div class="card">
     <div class="sec-head"><h2>9. Direct Manager Comments</h2></div>
+    <p class="hint">To be completed by the Line Manager.</p>
     <div class="field">
       <p class="hint">Describe what this employee does exceptionally well.</p>
       <label>Key Strengths *</label><textarea id="strengthsText"></textarea>
@@ -197,11 +198,6 @@
       <p class="hint">Write your overall assessment of the employee's performance this period.</p>
       <label>Overall Narrative *</label><textarea id="narrativeText"></textarea>
     </div>
-  </div>
-
-  <!-- SECTION 10: Direct Manager Sign-off -->
-  <div class="card">
-    <div class="sec-head"><h2>10. Direct Manager Sign-off</h2></div>
     <div class="grid2">
       <div class="field"><label>Direct Manager Name *</label><input type="text" id="managerName" placeholder="Direct manager's full name"></div>
       <div class="field"><label>Direct Manager Title *</label><input type="text" id="managerTitle" placeholder="e.g. Sales Manager"></div>
