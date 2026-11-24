@@ -87,7 +87,7 @@
         </select>
       </div>
       <div class="field">
-        <p class="hint">Type your full name below &mdash; this acts as your electronic signature.</p>
+        <p class="hint">Type your name below &mdash; this acts as your electronic signature.</p>
         <label>Employee Signature *</label><input type="text" id="empSig" placeholder="Employee's full name as signature">
       </div>
     </div>
@@ -118,20 +118,15 @@
   <div class="card">
     <div class="sec-head"><h2>5. Attendance</h2><span class="weight">Weight: 10%</span></div>
     <div class="field">
-      <p class="hint">Rate the employee's overall attendance commitment 1&ndash;10 (10 = perfect, 1 = very poor). The system converts this to a score automatically &mdash; you do not choose the final rating.</p>
-      <label>Attendance Commitment Rate (1&ndash;10) *</label>
+      <p class="hint">Rate the employee's overall attendance commitment 1&ndash;5 (5 = perfect, 1 = unreliable).</p>
+      <label>Attendance Commitment Rate (1&ndash;5) *</label>
       <select id="attCommitment">
         <option value="" selected disabled>-- Select --</option>
-        <option value="10">10 - Perfect commitment</option>
-        <option value="9">9</option>
-        <option value="8">8</option>
-        <option value="7">7</option>
-        <option value="6">6</option>
-        <option value="5">5</option>
-        <option value="4">4</option>
-        <option value="3">3</option>
-        <option value="2">2</option>
-        <option value="1">1 - Very poor</option>
+        <option value="5">5 - Perfect commitment</option>
+        <option value="4">4 - Very reliable</option>
+        <option value="3">3 - Generally reliable</option>
+        <option value="2">2 - Frequent issues</option>
+        <option value="1">1 - Unreliable</option>
       </select>
     </div>
   </div>
@@ -199,11 +194,11 @@
       <label>Overall Narrative *</label><textarea id="narrativeText"></textarea>
     </div>
     <div class="grid2">
-      <div class="field"><label>Direct Manager Name *</label><input type="text" id="managerName" placeholder="Direct manager's full name"></div>
+      <div class="field"><label>Direct Manager Name *</label><input type="text" id="managerName" placeholder="Direct manager's name"></div>
       <div class="field"><label>Direct Manager Title *</label><input type="text" id="managerTitle" placeholder="e.g. Sales Manager"></div>
       <div class="field">
-        <p class="hint">The direct manager types their full name below &mdash; this acts as their electronic signature.</p>
-        <label>Direct Manager Signature *</label><input type="text" id="managerSig" placeholder="Direct manager's full name as signature">
+        <p class="hint">Type the direct manager's name below &mdash; this acts as their electronic signature.</p>
+        <label>Direct Manager Signature *</label><input type="text" id="managerSig" placeholder="Direct manager's name as signature">
       </div>
     </div>
   </div>
@@ -289,7 +284,7 @@ function collectData() {
   if (!val("managerName").trim()) errors.push("Direct Manager Name");
   if (!val("managerTitle").trim()) errors.push("Direct Manager Title");
   if (!val("managerSig").trim()) errors.push("Direct Manager Signature");
-  if (!val("attCommitment")) errors.push("Attendance Commitment Rate (1-10)");
+  if (!val("attCommitment")) errors.push("Attendance Commitment Rate (1-5)");
   if (val("violations").trim() === "") errors.push("Number of Violations / Penalties Submitted to HR");
   if (!val("objectives2027").trim()) errors.push("2027 Objectives");
 
@@ -355,8 +350,8 @@ function collectData() {
 }
 /* ============ SCORING ENGINE (background) ============ */
 function attendanceScore(d) {
-  // Commitment rate 1-10, divided by 2 to fit 1-5 scale
-  return Math.max(1, Math.round((d.attCommitment / 2) * 100) / 100);
+  // Commitment rate 1-5, used directly
+  return d.attCommitment;
 }
 
 function violationsScore(d) {
@@ -374,7 +369,7 @@ function computeScores(d) {
   var violScore = violationsScore(d);
   var penalties = [];
   if (d.violations > 0) penalties.push("Violations: " + d.violations + " violation(s)/penalties reported (score " + violScore + "/5 in the Violations category).");
-  if (d.attCommitment <= 3) penalties.push("Low attendance commitment rate (" + d.attCommitment + "/10) — flagged for HR review.");
+  if (d.attCommitment <= 2) penalties.push("Low attendance commitment rate (" + d.attCommitment + "/5) — flagged for HR review.");
 
   var weights = { goals:WEIGHTS.goals, comp:WEIGHTS.comp, qual:WEIGHTS.qual, att:WEIGHTS.att, viol:WEIGHTS.violations, dev:(d.trainingReceived ? WEIGHTS.dev : 0) };
   var wTotal = weights.goals + weights.comp + weights.qual + weights.att + weights.viol + weights.dev;
@@ -405,7 +400,7 @@ function generateInsights(d, s) {
   insights.push("<b>Biggest risk:</b> "+cats[cats.length-1].name+" ("+cats[cats.length-1].avg.toFixed(2)+"/5) needs the most attention.");
   if (s.devExcluded) insights.push("<b>Development excluded:</b> No training was offered this year, so the Development category was excluded from the final score (not counted against the employee).");
   if (d.violations > 0) insights.push("<b>Violations flag:</b> "+d.violations+" violation(s)/penalties submitted to HR (HR to review/verify).");
-  if (d.attCommitment <= 3) insights.push("<b>Low commitment:</b> Attendance commitment rate of "+d.attCommitment+"/10 is below expectations.");
+  if (d.attCommitment <= 3) insights.push("<b>Low commitment:</b> Attendance commitment rate of "+d.attCommitment+"/5 is below expectations.");
   insights.push("<b>2027 Objectives (employee):</b> "+(d.objectives2027 || "None listed."));
   var lowComps = [];
   for (var i=0;i<d.comps.length;i++){ if (d.comps[i].score <= 2) lowComps.push(d.comps[i].name); }
